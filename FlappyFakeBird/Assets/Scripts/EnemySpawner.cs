@@ -58,8 +58,9 @@ public class EnemySpawner : MonoBehaviour
         for (int index = 0; index < howMany; index++)
         {
             RandomEnemy(); // enemy 랜덤생성
-            float yRange = Random.Range(-1.2f, 1.2f); // y축의 위치 랜덤 지정
-            spawnPosition = new Vector2(transform.position.x, yRange); // 스폰 위치 지정
+            float yRange = Random.Range(0,5)*0.5f; // y축의 위치 랜덤 지정
+            spawnPosition = new Vector2(transform.position.x, transform.position.y - yRange); 
+            // 스폰 위치 지정
             Instantiate(enemyPrefabs[enemyIndex], spawnPosition, Quaternion.identity); // 객체 생성
         }
     }
