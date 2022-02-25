@@ -12,12 +12,12 @@ public class EnemySpawner : MonoBehaviour
     //Random.Range() : 랜덤한 숫자를 돌려주는 함수
 
     #region Variables
-    //public GameObject enemyPrefab; // 한 개만 랜덤하게 생성하도록
+    //public GameObject enemyPrefab; // 한 개만 랜덤하게 생성하도록 -> 프리팹을 여러 개 사용할것이기 때문에 주석처리
     public GameObject[] enemyPrefabs = null; // Enemy prefab 세 개를 넣기 위해 배열로 작성
     private Vector2 spawnPosition; // spawnPosition의 위치 y를 랜덤으로 잡기 위해 Vector2
     private int enemyIndex; // Enemy 생성을 랜덤으로 하기 위한 변수
     private bool isGame; // Spawn 함수 사용을 위한 조건변수
-    private float startDelay = 1.0f; // 소환되는 시간 간격을 주기 위한 변수 1
+    private float startDelay = 1.0f; // 게임 시작 이후 처음에 소환될 때 까지의 시간
     private float spawnInterval = 2.5f; // 다음에 소환 될 시간 간격
     #endregion
 
@@ -57,19 +57,20 @@ public class EnemySpawner : MonoBehaviour
         int howMany = Random.Range(2, 6); // 생성할 enemy 개체수 2~5 사이 랜덤지정
         for (int index = 0; index < howMany; index++)
         {
-            RandomEnemy(); // enemy 랜덤생성
+            //RandomEnemy(); // enemy 랜덤생성 // enemyIndex = Random.Range(0,3); 를 하는 편이 낫다.
+            enemyIndex = Random.Range(0, 3);
             float yRange = Random.Range(0,5)*0.5f; // y축의 위치 랜덤 지정
             spawnPosition = new Vector2(transform.position.x, transform.position.y - yRange); 
-            // 스폰 위치 지정
-            Instantiate(enemyPrefabs[enemyIndex], spawnPosition, Quaternion.identity); // 객체 생성
+            // enemy spawner의 x, z좌표, 랜덤으로 생성된 y좌표로 생성위치 지정
+            Instantiate(enemyPrefabs[enemyIndex], spawnPosition, Quaternion.identity); 
+            // 객체 생성. Destroy는 Enemy scrip의 Start함수에서 진행.
         }
     }
 
     // enemy의 종류도 랜덤하게 나오도록 하기 위한 함수
-    private int RandomEnemy()
-    {
-        enemyIndex = Random.Range(0, 3);
-        return enemyIndex;
-    }
-
+    //private int RandomEnemy()
+    //{
+    //    enemyIndex = Random.Range(0, 3);
+    //    return enemyIndex;
+    //}
 }

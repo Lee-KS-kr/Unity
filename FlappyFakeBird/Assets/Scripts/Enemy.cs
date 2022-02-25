@@ -11,7 +11,7 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
-        Destroy(gameObject, 5.5f);
+        Destroy(gameObject, 5.5f); // Instantiate 이후 5.5초 후에 삭제됨
     }
 
     private void Update()
