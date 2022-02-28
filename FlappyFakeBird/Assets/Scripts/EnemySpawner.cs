@@ -59,7 +59,7 @@ public class EnemySpawner : MonoBehaviour
         {
             //RandomEnemy(); // enemy 랜덤생성 // enemyIndex = Random.Range(0,3); 를 하는 편이 낫다.
             enemyIndex = Random.Range(0, 3);
-            float yRange = Random.Range(0,5)*0.5f; // y축의 위치 랜덤 지정
+            float yRange = Random.Range(0, 5) * 0.5f; // y축의 위치 랜덤 지정
             spawnPosition = new Vector2(transform.position.x, transform.position.y - yRange); 
             // enemy spawner의 x, z좌표, 랜덤으로 생성된 y좌표로 생성위치 지정
             Instantiate(enemyPrefabs[enemyIndex], spawnPosition, Quaternion.identity); 
