@@ -1593,6 +1593,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1772271067}
   - component: {fileID: 1772271066}
+  - component: {fileID: 1772271068}
   m_Layer: 0
   m_Name: TeacherSpawner
   m_TagString: Untagged
@@ -1632,6 +1633,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1772271068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1772271065}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e44f68615fa0d0f49afc5040fae88506, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyPrefabs:
+  - {fileID: 9096293794339847930, guid: 1c0cd7d76f182e941bdef83d175f3d33, type: 3}
+  - {fileID: 7411881329869150870, guid: c7c842cf30c05e343ab57153b35ba913, type: 3}
+  - {fileID: 1268406034844354671, guid: 4442f839177e4e1419836afe87c0dc64, type: 3}
+  spawnStartDelay: 0.3
+  spawnInterval: 1
 --- !u!1 &1790046041
 GameObject:
   m_ObjectHideFlags: 0
