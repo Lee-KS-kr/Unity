@@ -17,11 +17,12 @@ public class Player : MonoBehaviour // MonoBehaniour에서 상속받은 플레이어 클래�
     public float jumpPower; 
     //점프파워를 콘솔에서 설정할 수 있도록 public으로 변수선언 지정되는 초기값은 10.0이다.
     private Rigidbody2D rigidBody;
+    public GameObject youDied;
     public float speed = 10;
     //리지드바디 컴포넌트를 가져오기 위한 변수선언
-    public float torqueSpeed = 10.0f;
-    public bool isGameOver = false;
-    public bool isOnGround = false;
+    public float torqueSpeed = 10.0f; // 회전 속도. 적당한 회전 속도를 unity에서 확인하며 작업하기 위해 public선언
+    public bool isGameOver = false; // 충돌여부확인. 충돌시 게임오버를 on으로 하여 조작을 막는 역할
+    public bool isOnGround = false; // 바닥에 닿았는지 여부 확인. player가 바닥에 닿으면 스크롤을 멈춘다.
 
     // 게임 오브젝트가 만들어진(인스턴스) 직후 실행되는 함수
     private void Awake()
@@ -50,23 +51,26 @@ public class Player : MonoBehaviour // MonoBehaniour에서 상속받은 플레이어 클래�
         // context.started; 키를 눌렀을 때
         // context.performed; 키를 길게 눌렀을 때(챠징 등)
         // context.canceled; 키를 눌렀다가 뗐을 때
-        if (context.started && !isGameOver)
+        if (context.started && !isGameOver) // enemy나 ground에 닿으면 조작을 멈추게 한다.
             rigidBody.AddForce(Vector2.up * jumpPower);
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
+    private void OnCollisionEnter2D(Collision2D other) // collider충돌로 gameover여부 측정
     {
-        if (other.gameObject.CompareTag("Ground"))
+        if (other.gameObject.CompareTag("Ground")) // ground와 충돌하였을 때 
         {
-            isOnGround = true;
-            isGameOver = true;
-            rigidBody.AddTorque(torqueSpeed);
-            rigidBody.AddForce(Vector2.left * speed, ForceMode2D.Impulse);
+            isOnGround = true; // ground와 충돌하였음을 true로 하여 스크롤을 중지
+            isGameOver = true; // 더이상 조작을 못하도록 true로 설정
+            rigidBody.AddTorque(torqueSpeed); // 회전시킴 
+            rigidBody.AddForce(Vector2.left * speed, ForceMode2D.Impulse); // 왼쪽으로 보냄
+            youDied.SetActive(true);
+            
         }
-        else if (other.gameObject.CompareTag("Enemy"))
+        else if (other.gameObject.CompareTag("Enemy")) // enemy개체와 충돌하였을 때
         {
-            isGameOver = true;
-            rigidBody.AddForce(Vector2.down,ForceMode2D.Impulse);
+            isGameOver = true; // 더이상 조작을 못하도록 true로 설정
+            rigidBody.AddForce(Vector2.down,ForceMode2D.Impulse); // 바닥에 떨어지도록
+            // 이후 바닥에 닿으면 59번줄이 실행됨
         }
     }
 }
