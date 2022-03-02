@@ -34,37 +34,66 @@ public class Teacher : MonoBehaviour
         // 그 후 반복해서 생성 시작
         while (true) // 무한 루프
         {
-            bool result = false;
-            bool[] flags = new bool[MAX_SPACE_COUNT];
-            while (result == false)
-            {
-                for (int i = 0; i < MAX_SPACE_COUNT; i++)
-                {
-                    if (Random.Range(0, 2) == 1)
-                        flags[i] = true;
-                }
-                int index = Random.Range(0, MAX_SPACE_COUNT - 1);
-                flags[index] = false;
-                flags[index + 1] = false;
-
-                for (int i = 0; i < MAX_SPACE_COUNT; i++)
-                {
-                    if (flags[i] == true)
-                    {
-                        result = true;
-                        break;
-                    }
-                }
-            }
+            // bool[] flags = GetFlagsBoolType();
+            int flags = GetFlags(); // 각 비트를 확인해서 1일 때만 새를 생성
+            int singleFlag = 1;
 
             for (int i = 0; i < MAX_SPACE_COUNT; i++)
             {
-                if (flags[i] == true)
+                // if (flags[i] == true) // GetFlagsBoolType용 조건문
+                // flags와 singleFlag를 &해서 0이 아니면 singleFlag에 설정된 비트 위치에 1이 되어있다는 것
+                if ((flags & singleFlag) != 0)
                     EnemyGenerate(i);
+                singleFlag <<= 1; //singleFlag의 비트를 한번 컴사할 떄 마다 왼쪽으로 한칸씩 옮김
             }
 
             yield return new WaitForSeconds(spawnInterval);
         }
+    }
+
+    private int GetFlags()
+    {
+        int flags = 0; // 리턴용 변수. 최종적으로 계산한 플래그 값이 들어갈 변수
+        // 6비트만 남겨 놓을 예정. 1로 설정된 칸에서는 적이 생성되고, 0인 곳은 아무것도 생성되지 않는다.
+        do
+        {
+            int random = (int)(Random.value * 100.0f); // 화이트보드 1번
+            random &= ((1 << MAX_SPACE_COUNT) - 1);
+            int mask = 0b_0011;
+            mask = mask << Random.Range(0, MAX_SPACE_COUNT - 1); // mask를 랜덤하게 쉬프트
+            mask = ~mask; // not연산을 통해 bit값 뒤집기
+            flags = random & mask; // 최종적으로 random값에 mask값을 &시켜서 두칸 비우기
+        } while (flags == 0); // 모든 칸이 비는 것을 방지하기 위해 설정
+
+        return flags;
+    }
+
+    private static bool[] GetFlagsBoolType()
+    {
+        bool result = false;
+        bool[] flags = new bool[MAX_SPACE_COUNT];
+        while (result == false)
+        {
+            for (int i = 0; i < MAX_SPACE_COUNT; i++)
+            {
+                if (Random.Range(0, 2) == 1)
+                    flags[i] = true;
+            }
+            int index = Random.Range(0, MAX_SPACE_COUNT - 1);
+            flags[index] = false;
+            flags[index + 1] = false;
+
+            for (int i = 0; i < MAX_SPACE_COUNT; i++)
+            {
+                if (flags[i] == true)
+                {
+                    result = true;
+                    break;
+                }
+            }
+        }
+
+        return flags;
     }
 
     private void EnemyGenerate(int index)

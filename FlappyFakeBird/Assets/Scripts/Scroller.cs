@@ -11,6 +11,7 @@ public class Scroller : MonoBehaviour
     private GameObject[] backgrounds = null; // 배경 한 줄을 여러개 담고 있는 배열
     private GameObject frontBG = null; // 제일 앞에 있는 배경 한 줄
     private GameObject rearBG = null; // 제일 마지막에 있는 배경 한 줄
+    private Player playerCont;
     private const float END_POINT = -2.0f; // 배경 한 줄이 완전히 밖으로 나간 것을 확인하기 위한 기준점 const로 선언해서 절대로 값이 변하지 않는다.
     private const float BACKGROUND_GAP = 1.43f; // 배경 한 줄의 폭
     private int frontIndex = 0; // backgrounds에서 현재 front를 가리키는 인덱스
@@ -22,6 +23,7 @@ public class Scroller : MonoBehaviour
         // backgrounds 배열에 메모리를 할당.
         // transform.childCount에 기록된 갯수만큼 GameObject를 담을 수 있는 크기로 메모리 할당
         backgrounds = new GameObject[transform.childCount];
+        playerCont = GameObject.Find("Player").GetComponent<Player>();
 
         // for문을 이용해 transform.childCount만큼 반복
         for (int i = 0; i < transform.childCount; i++)
@@ -39,6 +41,7 @@ public class Scroller : MonoBehaviour
     // 매 프레임마다 호출(Call)된다
     private void Update()
     {
+        if (playerCont.isOnGround) return;
         // for문을 이용해 반복 수행. i가 0부터 transform.childCound -1까지 변경됨
         for (int i = 0; i < transform.childCount; i++)
         {

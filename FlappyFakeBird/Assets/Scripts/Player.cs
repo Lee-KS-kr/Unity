@@ -19,6 +19,9 @@ public class Player : MonoBehaviour // MonoBehaniour에서 상속받은 플레이어 클래�
     private Rigidbody2D rigidBody;
     public float speed = 10;
     //리지드바디 컴포넌트를 가져오기 위한 변수선언
+    public float torqueSpeed = 10.0f;
+    public bool isGameOver = false;
+    public bool isOnGround = false;
 
     // 게임 오브젝트가 만들어진(인스턴스) 직후 실행되는 함수
     private void Awake()
@@ -47,7 +50,23 @@ public class Player : MonoBehaviour // MonoBehaniour에서 상속받은 플레이어 클래�
         // context.started; 키를 눌렀을 때
         // context.performed; 키를 길게 눌렀을 때(챠징 등)
         // context.canceled; 키를 눌렀다가 뗐을 때
-        if(context.started)
+        if (context.started && !isGameOver)
             rigidBody.AddForce(Vector2.up * jumpPower);
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("Ground"))
+        {
+            isOnGround = true;
+            isGameOver = true;
+            rigidBody.AddTorque(torqueSpeed);
+            rigidBody.AddForce(Vector2.left * speed, ForceMode2D.Impulse);
+        }
+        else if (other.gameObject.CompareTag("Enemy"))
+        {
+            isGameOver = true;
+            rigidBody.AddForce(Vector2.down,ForceMode2D.Impulse);
+        }
     }
 }
