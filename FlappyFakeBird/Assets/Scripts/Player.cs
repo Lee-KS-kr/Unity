@@ -64,7 +64,6 @@ public class Player : MonoBehaviour // MonoBehaniour에서 상속받은 플레이어 클래�
             rigidBody.AddTorque(torqueSpeed); // 회전시킴 
             rigidBody.AddForce(Vector2.left * speed, ForceMode2D.Impulse); // 왼쪽으로 보냄
             youDied.SetActive(true);
-            
         }
         else if (other.gameObject.CompareTag("Enemy")) // enemy개체와 충돌하였을 때
         {
