@@ -23,7 +23,7 @@ public class GroundScroller : MonoBehaviour
         // backgrounds 배열에 메모리를 할당.
         // transform.childCount에 기록된 갯수만큼 GameObject를 담을 수 있는 크기로 메모리 할당
         backgrounds = new GameObject[transform.childCount];
-        playerCont = GameObject.Find("Player").GetComponent<Player>();
+        playerCont = GameObject.FindObjectOfType<Player>();
 
         // for문을 이용해 transform.childCount만큼 반복
         for (int i = 0; i < transform.childCount; i++)
@@ -41,7 +41,7 @@ public class GroundScroller : MonoBehaviour
     // 매 프레임마다 호출(Call)된다
     private void Update()
     {
-        if (playerCont.isOnGround) return;
+        if (playerCont.transform.position.x < 0.7f) return;
         // for문을 이용해 반복 수행. i가 0부터 transform.childCound -1까지 변경됨
         for (int i = 0; i < transform.childCount; i++)
         {

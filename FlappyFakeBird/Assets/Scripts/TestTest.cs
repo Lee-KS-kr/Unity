@@ -4,73 +4,41 @@ using UnityEngine;
 
 public class TestTest : MonoBehaviour
 {
-    public GameObject[] enemyPrefabs = null;
-    public float spawnStartDelay = 0.3f;
-    public float spawnInterval = 1.0f;
+    //FindObjectOfType : 특정 타입의 컴포넌트를 가지고 있는 게임 오브젝트를 찾아주는 함수
+    //Find : 파라메터로 받은 문자열과 같은 이름을 가진 게임 오브젝트를 찾아주는 함수 (가장 비효율적)
+    //FindGameObjectWithTag : 파라메터로 받은 문자열과 같은 태그를 가진 게임 오브젝트를 찾아주는 함수
 
-    private const int MAX_SPACE_COUNT = 6;
-    private const float SPACE_HEIGHT = 0.4f;
-    private const float LIFETIME = 5;
 
-    private void Start()
+    // 싱글톤 사용법. Monobehaviour를 상속받은 스크립트에서는 사용이 불가능하다.
+    private static TestTest instance = null; // 프로그램 전체에서 단 하나만 존재한다.
+    private TestTest() { } // 생성자를 private으로 해서 밖에서 new 할 수 없도록 한다.
+
+    private static int score = 0;
+    public static int Score
     {
-        StartCoroutine(Spawn());
-    }
-
-    private IEnumerator Spawn()
-    {
-        yield return new WaitForSeconds(spawnStartDelay);
-
-        // 그 후 반복해서 생성 시작
-        while (true) // 무한 루프
+        get
         {
-            bool result = false;
-            bool[] flags = new bool[MAX_SPACE_COUNT];
-            BitArray bitFlags = new BitArray(flags);
-
-            while (result == false)
-            {
-                for (int i = 0; i < MAX_SPACE_COUNT; i++)
-                {
-                    if (Random.Range(0, 2) == 1)
-                        flags[i] = true;
-                }
-                int index = Random.Range(0, MAX_SPACE_COUNT - 1);
-                flags[index] = false;
-                flags[index + 1] = false;
-
-                for (int i = 0; i < MAX_SPACE_COUNT; i++)
-                {
-                    if (flags[i] == true)
-                    {
-                        result = true;
-                        break;
-                    }
-                }
-            }
-
-            for (int i = 0; i < MAX_SPACE_COUNT; i++)
-            {
-                if (flags[i] == true)
-                    EnemyGenerate(i);
-            }
-
-            yield return new WaitForSeconds(spawnInterval);
+            return score;
+        }
+        set
+        {
+            score = value;
         }
     }
 
-    private void EnemyGenerate(int index)
+    // 프로퍼티 작성
+    // public이라 아직 밖에서 접근이 가능하다
+    // static 함수는 객체를 밖에서 생성하지 않아도 되기 때문에 static으로 선언
+
+    public static TestTest Inst
     {
-        // 어떤 종류의 적을 생성할지 결정
-        int enemyIndex = Random.Range(0, enemyPrefabs.Length);
-        GameObject enemy = GameObject.Instantiate(enemyPrefabs[enemyIndex], this.transform);
-        int spaceIndex = Random.Range(0, MAX_SPACE_COUNT);
-        enemy.transform.Translate(Vector2.down * index * SPACE_HEIGHT);
-        Destroy(enemy, LIFETIME);
-
+        get
+        {
+            if (instance == null) // 객체 생성이 한번도 안일어났는지 확인
+            {
+                instance = new TestTest(); // 한번도 안일어났으면 그때 처음으로 객체 생성
+            }
+            return instance; // return까지 왔다는 것은 instance에 이미 무엇인가 할당되어있음
+        }
     }
-
-    //2월 28일 과제
-    // 코드가 이해되지 않은 사람 -> 주석보고 코드 이해해서 오기
-    // 코드가 이해된 사람 -> bit 연산을 이용해 flags를 세팅하고 사용하도록 코드를 작성하기
 }

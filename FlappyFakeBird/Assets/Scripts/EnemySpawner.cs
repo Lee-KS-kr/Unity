@@ -17,8 +17,8 @@ public class EnemySpawner : MonoBehaviour
     private Vector2 spawnPosition; // spawnPosition의 위치 y를 랜덤으로 잡기 위해 Vector2
     private int enemyIndex; // Enemy 생성을 랜덤으로 하기 위한 변수
     private bool isGame; // Spawn 함수 사용을 위한 조건변수
-    private float startDelay = 1.0f; // 게임 시작 이후 처음에 소환될 때 까지의 시간
-    private float spawnInterval = 2.5f; // 다음에 소환 될 시간 간격
+    private float startDelay = 1.5f; // 게임 시작 이후 처음에 소환될 때 까지의 시간
+    private float spawnInterval = 1.5f; // 다음에 소환 될 시간 간격
     #endregion
 
     private void Start()

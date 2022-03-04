@@ -68,7 +68,9 @@ public class Player : MonoBehaviour // MonoBehaniour에서 상속받은 플레이어 클래�
         else if (other.gameObject.CompareTag("Enemy")) // enemy개체와 충돌하였을 때
         {
             isGameOver = true; // 더이상 조작을 못하도록 true로 설정
-            rigidBody.AddForce(Vector2.down,ForceMode2D.Impulse); // 바닥에 떨어지도록
+            rigidBody.constraints = RigidbodyConstraints2D.None;
+            //rigidBody.AddForce(Vector2.down,ForceMode2D.Impulse); // 바닥에 떨어지도록
+            rigidBody.gravityScale = 1.0f;
             // 이후 바닥에 닿으면 59번줄이 실행됨
         }
     }

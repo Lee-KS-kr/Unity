@@ -5,12 +5,14 @@ using UnityEngine;
 public class Teacher : MonoBehaviour
 {
     public GameObject[] enemyPrefabs = null;
+    private GameManager gameManager;
     public float spawnStartDelay = 0.3f;
     public float spawnInterval = 1.0f;
-
     private const int MAX_SPACE_COUNT = 6;
     private const float SPACE_HEIGHT = 0.4f;
     private const float LIFETIME = 5;
+    private int enemyCount = 0; // 에너미 마리수를 세기 위한 변수
+    private Queue queue = new Queue(); // 마리수에 따라 점수를 상승시키기 위함
 
     // 조건 새는 한번에 최소 1칸에서 최대 4칸까지 생성이 가능
     // 조건 새는 생성될 때 최소 두 개의 빈칸이 연속적으로 있어야 한다.
@@ -22,6 +24,7 @@ public class Teacher : MonoBehaviour
     // 최초의 Update 실행 직전에 한번만 호출
     private void Start()
     {
+        gameManager = GameObject.FindObjectOfType<GameManager>();
         // Spawn함수를 코루틴으로 실행
         StartCoroutine(Spawn());
     }
@@ -37,16 +40,19 @@ public class Teacher : MonoBehaviour
             // bool[] flags = GetFlagsBoolType();
             int flags = GetFlags(); // 각 비트를 확인해서 1일 때만 새를 생성
             int singleFlag = 1;
-
+            enemyCount = 0; // 점수가 계속 누적되지 않게 하기 위해 0으로
             for (int i = 0; i < MAX_SPACE_COUNT; i++)
             {
                 // if (flags[i] == true) // GetFlagsBoolType용 조건문
                 // flags와 singleFlag를 &해서 0이 아니면 singleFlag에 설정된 비트 위치에 1이 되어있다는 것
                 if ((flags & singleFlag) != 0)
+                {
                     EnemyGenerate(i);
+                    enemyCount++; // 한마리 생성시마다 에너미 카운트를 추가
+                }
                 singleFlag <<= 1; //singleFlag의 비트를 한번 컴사할 떄 마다 왼쪽으로 한칸씩 옮김
             }
-
+            queue.Enqueue(enemyCount); // 확인한 에너미 카운트를 큐에 추가
             yield return new WaitForSeconds(spawnInterval);
         }
     }
@@ -105,6 +111,11 @@ public class Teacher : MonoBehaviour
         enemy.transform.Translate(Vector2.down * index * SPACE_HEIGHT);
         Destroy(enemy, LIFETIME);
 
+    }
+
+    public int GetQueue() // 게임매니저에서 적이 라인캐스트에 감지될때 가져오기 위한 매서드
+    {
+        return (int)queue.Dequeue();
     }
 
     //2월 28일 과제
