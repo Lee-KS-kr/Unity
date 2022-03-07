@@ -24,7 +24,8 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         if (playerController.isGameOver) return; // 게임오버가 되면 점수상승x
-        scoreText.text = "Score : " + userScore; // text UI에 점수 상승
+        //scoreText.text = "Score : " + userScore; 
+        scoreText.text = $"Score : {userScore}"; // text UI에 점수 상승
     }
 
     IEnumerator ScoreUp() // 점수 누적용 코루틴
