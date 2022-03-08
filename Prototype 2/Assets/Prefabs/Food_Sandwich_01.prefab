@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 2430500769124887521}
   - component: {fileID: 2430500769126017313}
   - component: {fileID: 2430500767991041843}
-  - component: {fileID: 498615065}
   - component: {fileID: 714092795650562157}
   - component: {fileID: 5694990033244716375}
+  - component: {fileID: 6035583422497905632}
   m_Layer: 0
   m_Name: Food_Sandwich_01
   m_TagString: Untagged
@@ -98,18 +98,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 40
---- !u!114 &498615065
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2430500769128216545}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2637632b8ff0aaf4d96f7988bf2cdc7a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &714092795650562157
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -139,3 +127,15 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &6035583422497905632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2430500769128216545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c52ee72091692143869a36cdefe1fd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

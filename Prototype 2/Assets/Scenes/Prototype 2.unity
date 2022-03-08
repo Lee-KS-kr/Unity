@@ -491,7 +491,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 45
-  orthographic: 0
+  orthographic: 1
   orthographic size: 10
   m_Depth: -1
   m_CullingMask:
@@ -754,10 +754,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 1707514731}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 895aedc3dacec58449a1ef7e0688fa50, type: 3}
+  m_Script: {fileID: 11500000, guid: 45c0e1f24e2ce4a5b9bf1f3a7499cd45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  horizontalInput: 0
-  speed: 10
-  xBound: 15
-  projectile: {fileID: 2430500769128216545, guid: a1cfc5e3a490afe46923867a0588d22e, type: 3}
+  pooledObjects: []
+  objectToPool: {fileID: 2430500769128216545, guid: a1cfc5e3a490afe46923867a0588d22e, type: 3}
+  amountToPool: 20
+--- !u!114 &1707514733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1707514731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38e917c52987daa41af6a0305d9813c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectilePrefab: {fileID: 2430500769128216545, guid: a1cfc5e3a490afe46923867a0588d22e, type: 3}
