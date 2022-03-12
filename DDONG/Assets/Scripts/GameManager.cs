@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Text scoreText;
     [SerializeField] private Text timerText;
     [SerializeField] private GameObject gameOverImage;
+    private AudioSource backGroundMusic;
 
     private Vector2 startVector = new Vector2(-9,-3.5f);
     private Vector2 endVector = new Vector2(9, -3.5f);
@@ -23,18 +25,21 @@ public class GameManager : MonoBehaviour
     #region Unity Methods
     private void Start()
     {
+        backGroundMusic = GetComponent<AudioSource>();
         StartCoroutine(ScoreUp());
     }
 
     private void Update()
     {
         timeElapsed += Time.deltaTime;
-        timerText.text = $"Timer : {(int)timeElapsed}";
         if(player.isGameOver)
         {
+            backGroundMusic.Stop();
             gameOverImage.SetActive(true);
+            player.gameObject.GetComponent<Collider2D>().isTrigger = true;
             return;
         }
+        timerText.text = $"Timer : {(int)timeElapsed}";
         scoreText.text = $"Score : {userScore}";
     }
     #endregion
@@ -52,6 +57,16 @@ public class GameManager : MonoBehaviour
             }
             yield return null;
         }
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
     }
     #endregion
 }
