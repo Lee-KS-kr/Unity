@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI; // UI text를 사용하기 위한 네임스페이스
+using System.IO;
 
 public class GameManager : MonoBehaviour
 {
@@ -41,5 +42,23 @@ public class GameManager : MonoBehaviour
             }
             yield return null;
         }
+    }
+
+    public void SaveGameData()
+    {
+        SaveData saveData = new SaveData();
+        saveData.highScore = 123;
+        saveData.test1 = 11.22f;
+        saveData.test2 = "Mizue_Lee";
+        string json = JsonUtility.ToJson(saveData);
+        string path = $"{Application.dataPath}/Save/Save.json";
+        File.WriteAllText(path, json);
+    }
+
+    public void LoadGameData()
+    {
+        string path = $"{Application.dataPath}/Save/Save.json";
+        string json = File.ReadAllText(path);
+        SaveData saveData = JsonUtility.FromJson<SaveData>(json);
     }
 }

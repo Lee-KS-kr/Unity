@@ -106,11 +106,12 @@ public class Teacher : MonoBehaviour
     {
         // 어떤 종류의 적을 생성할지 결정
         int enemyIndex = Random.Range(0, enemyPrefabs.Length);
-        GameObject enemy = GameObject.Instantiate(enemyPrefabs[enemyIndex], this.transform);
+        //GameObject enemy = GameObject.Instantiate(enemyPrefabs[enemyIndex], this.transform);
+        GameObject enemy = ObjectPool.Inst.GetEnemy();
         int spaceIndex = Random.Range(0, MAX_SPACE_COUNT);
+        enemy.transform.position = transform.position;
         enemy.transform.Translate(Vector2.down * index * SPACE_HEIGHT);
-        Destroy(enemy, LIFETIME);
-
+        //Destroy(enemy, LIFETIME);
     }
 
     public int GetQueue() // 게임매니저에서 적이 라인캐스트에 감지될때 가져오기 위한 매서드
