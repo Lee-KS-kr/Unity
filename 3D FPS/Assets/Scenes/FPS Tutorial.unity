@@ -141,13 +141,13 @@ MonoBehaviour:
   fireRate: 0.2
   damage: 30
   reloadTime: 2
-  reloadBulletCount: 30
-  currentBulletCount: 0
+  reloadBulletCount: 10
+  currentBulletCount: 10
   maxBulletCount: 0
-  carryBulletCount: 0
+  carryBulletCount: 23
   retroActionForce: 0
   retroActionFineSightForce: 0
-  fineSightOriginPos: {x: 0, y: 0, z: 0}
+  fineSightOriginPos: {x: 0.55, y: 0.335, z: -0.586}
   animator: {fileID: 189323968}
   muzzleFlash: {fileID: 198871729}
   fireSound: {fileID: 8300000, guid: e5e1e74d36473bf40b74b3c3ac9745f8, type: 3}
@@ -5026,7 +5026,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 198871727}
   m_LocalRotation: {x: 0.5, y: -0.5, z: -0.5, w: -0.5}
-  m_LocalPosition: {x: -2.9010012, y: 0.384, z: 0.44099975}
+  m_LocalPosition: {x: -2.901, y: 0.384, z: 0.47}
   m_LocalScale: {x: 0.09999999, y: 0.10000001, z: 0.10000002}
   m_Children:
   - {fileID: 974154300}
@@ -10480,6 +10480,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentGun: {fileID: 189323967}
+  isFineSightMode: 0
+  originPos: {x: 0, y: 0, z: 0}
 --- !u!82 &1903815940
 AudioSource:
   m_ObjectHideFlags: 0
