@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Camera theCamera;
     private Rigidbody playerRigidbody;
     private CapsuleCollider capsuleCollider;
+    private GunController gunController;
     #endregion
 
     #region Unity Methods
@@ -43,6 +44,7 @@ public class PlayerController : MonoBehaviour
         // 컴포넌트 할당
         capsuleCollider = GetComponent<CapsuleCollider>();
         playerRigidbody = GetComponent<Rigidbody>();
+        gunController = FindObjectOfType<GunController>();
 
         // 초기화
         applySpeed = walkSpeed;
@@ -108,6 +110,8 @@ public class PlayerController : MonoBehaviour
     {
         if (isCrouch)
             Crouch();
+
+        gunController.CancleFineSight();
 
         isRun = true;
         applySpeed = runSpeed;
