@@ -246,11 +246,6 @@ GameObject:
   m_Component:
   - component: {fileID: 653459376}
   - component: {fileID: 653459382}
-  - component: {fileID: 653459377}
-  - component: {fileID: 653459378}
-  - component: {fileID: 653459379}
-  - component: {fileID: 653459380}
-  - component: {fileID: 653459381}
   m_Layer: 0
   m_Name: Focus
   m_TagString: Untagged
@@ -273,79 +268,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 30, y: 0, z: 0}
---- !u!114 &653459377
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 653459375}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00151df62c0d93146bdeff3569edb2e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 1484645262}
-  offset: {x: 0, y: 8, z: -8}
-  limitX: {x: 0, y: 0, z: 0}
-  limitZ: {x: 0, y: 0, z: 0}
-  lerp: 1
---- !u!114 &653459378
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 653459375}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a353f23e242fdf9449bed71d738ef1ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 1484645255}
---- !u!114 &653459379
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 653459375}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0da419912c822644b8c0afe0a5da01b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 1484645262}
-  offset: {x: 0, y: 0, z: 0}
-  damping: 1
---- !u!114 &653459380
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 653459375}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2439c957ec39a6f46875977a24f3dc27, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 1484645255}
-  damping: 1
---- !u!114 &653459381
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 653459375}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b62c49e6da3c5d4cb1d568ea5ddec0e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 1484645255}
-  rotateSpeed: 2
 --- !u!114 &653459382
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -552,14 +474,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1484645255}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 317ee69959662ce4eb21169b95e36d11, type: 3}
+  m_Script: {fileID: 11500000, guid: 330493aff0d057f4697a91a4244c188d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 10
-  jumpPower: 10
-  playerCamera: {fileID: 0}
-  shoot: {fileID: 636329438}
-  stonePrefab: {fileID: 501189079200202240, guid: 9193fc43ca4cf524da585858a466cfd4, type: 3}
+  speed: 10
+  jumpPower: 2
+  fireBallPrefab: {fileID: 4182035584672132395, guid: 88ba836073ab9cd4fb5a239aea662cf7, type: 3}
+  spawnZone: {fileID: 636329438}
 --- !u!114 &1484645257
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -588,8 +509,8 @@ MonoBehaviour:
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1484645256}
-        m_TargetAssemblyTypeName: Player, Assembly-CSharp
-        m_MethodName: OnMove
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: Move
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -608,8 +529,8 @@ MonoBehaviour:
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1484645256}
-        m_TargetAssemblyTypeName: Player, Assembly-CSharp
-        m_MethodName: OnAttack
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: Attack
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -624,9 +545,9 @@ MonoBehaviour:
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1484645256}
-        m_TargetAssemblyTypeName: Player, Assembly-CSharp
-        m_MethodName: OnJump
-        m_Mode: 1
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: JumpUp
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

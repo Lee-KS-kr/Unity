@@ -145,8 +145,8 @@ MonoBehaviour:
   currentBulletCount: 10
   maxBulletCount: 0
   carryBulletCount: 23
-  retroActionForce: 0
-  retroActionFineSightForce: 0
+  retroActionForce: 0.3
+  retroActionFineSightForce: 0.7
   fineSightOriginPos: {x: 0.55, y: 0.335, z: -0.586}
   animator: {fileID: 189323968}
   muzzleFlash: {fileID: 198871729}
