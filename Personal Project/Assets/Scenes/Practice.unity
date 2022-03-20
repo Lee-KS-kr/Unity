@@ -246,6 +246,12 @@ GameObject:
   m_Component:
   - component: {fileID: 653459376}
   - component: {fileID: 653459382}
+  - component: {fileID: 653459377}
+  - component: {fileID: 653459381}
+  - component: {fileID: 653459380}
+  - component: {fileID: 653459379}
+  - component: {fileID: 653459378}
+  - component: {fileID: 653459383}
   m_Layer: 0
   m_Name: Focus
   m_TagString: Untagged
@@ -268,6 +274,79 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 30, y: 0, z: 0}
+--- !u!114 &653459377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 653459375}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d458058a78b43274e8543882d2cd958e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1484645262}
+  offset: {x: 0, y: 8, z: -8}
+  limitX: {x: 0, y: 0, z: 0}
+  limitZ: {x: 0, y: 0, z: 0}
+  lerp: 1
+--- !u!114 &653459378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 653459375}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18efd8d401bc13f478ac0150e8c5d7cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1484645255}
+--- !u!114 &653459379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 653459375}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b7f0ed21626892429dbf77c105b2e56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1484645255}
+  rotateSpeed: 5
+--- !u!114 &653459380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 653459375}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 702ac66a64079dc4fa08b1d33e76bd4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1484645262}
+  offset: {x: 0, y: 0, z: 0}
+  damping: 1
+--- !u!114 &653459381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 653459375}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af590df342f45eb43ac03bcb23c70761, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1484645255}
+  damping: 1
 --- !u!114 &653459382
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -281,7 +360,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Actions: {fileID: -944628639613478452, guid: 49097f10ed2901543a5191e8ecc47605, type: 3}
-  m_NotificationBehavior: 0
+  m_NotificationBehavior: 2
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
@@ -295,16 +374,8 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls: []
-    m_ActionId: 72b3c738-e7bb-4200-944e-66a861cb962d
-    m_ActionName: Player/Move[/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]
-  - m_PersistentCalls:
-      m_Calls: []
     m_ActionId: d68d93c0-27a3-4731-9714-e10b7be5db62
     m_ActionName: Player/Look[/Mouse/delta]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: b07bc27e-8c24-43f7-abd0-adce203f1c88
-    m_ActionName: Player/Fire[/Mouse/leftButton]
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: 75614fb9-7ccc-4b56-9938-e405926fcc8d
@@ -345,11 +416,41 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 3947362f-161e-46ea-8d4d-bb35970c9434
     m_ActionName: UI/TrackedDeviceOrientation
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 653459383}
+        m_TargetAssemblyTypeName: TestCamera, Assembly-CSharp
+        m_MethodName: CameraRotation
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 0dcca867-cc59-4eca-a5f3-fa89019b13d4
+    m_ActionName: Player/Camera Scroll[/Mouse/rightButton]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &653459383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 653459375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc5943e792e4fb146b80e4f50fcd5c78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraRotationLimit: 45
+  lookSensitivity: 5
 --- !u!1 &658422240
 GameObject:
   m_ObjectHideFlags: 0
@@ -477,10 +578,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 330493aff0d057f4697a91a4244c188d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
+  walkSpeed: 5
   jumpPower: 2
-  fireBallPrefab: {fileID: 4182035584672132395, guid: 88ba836073ab9cd4fb5a239aea662cf7, type: 3}
-  spawnZone: {fileID: 636329438}
+  playerCamera: {fileID: 625896707}
+  shoot: {fileID: 636329438}
+  stonePrefab: {fileID: 4182035584672132395, guid: 88ba836073ab9cd4fb5a239aea662cf7, type: 3}
 --- !u!114 &1484645257
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -510,7 +612,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1484645256}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: Move
+        m_MethodName: OnMove
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -530,7 +632,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1484645256}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: Attack
+        m_MethodName: OnAttack
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -546,8 +648,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1484645256}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: JumpUp
-        m_Mode: 0
+        m_MethodName: OnJump
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
