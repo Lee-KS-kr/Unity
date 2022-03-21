@@ -69,4 +69,19 @@ public class HandController : MonoBehaviour
         }
         return false;
     }
+
+    public void HandChange(Hand _hand)
+    {
+        if (WeaponManager.currentWeapon != null)
+        {
+            WeaponManager.currentWeapon.gameObject.SetActive(false);
+        }
+
+        currentHand = _hand;
+        WeaponManager.currentWeapon = currentHand.transform;
+        WeaponManager.currentWeaponAnimator = currentHand.animator;
+
+        currentHand.transform.localPosition = Vector3.zero;
+        currentHand.gameObject.SetActive(true);
+    }
 }
