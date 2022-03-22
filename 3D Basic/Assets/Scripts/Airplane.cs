@@ -1,0 +1,38 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Airplane : MonoBehaviour
+{
+    // 실습
+    // 비행기 게임 오브젝트 만들기
+    // 이름 : Airplane
+    // 방식 : 기본 도형 or 프로빌더
+    // 스크립트 완성
+
+    //public GameObject[] propellerPrefab;
+    //private float propellerSpinSpeed = 1800.0f;
+    private Transform propTransform = null;
+    public float propSpeed = 1500;
+    public bool propeller = false; // true면 프로펠러가 돌아가고 false면 안돌아간다.
+
+    private void Awake()
+    {
+        propeller = true;
+        propTransform = transform.Find("Propeller");
+    }
+
+    private void Update()
+    {
+        //if (propeller)
+        //{
+        //    for (int i = 0; i < propellerPrefab.Length; i++)
+        //    {
+        //        propellerPrefab[i].transform.Rotate(-Vector3.forward * propellerSpinSpeed * Time.deltaTime, Space.Self);
+        //    }
+        //}
+
+        propTransform.Rotate(0, 0, -propSpeed * Time.deltaTime);
+
+    }
+}
