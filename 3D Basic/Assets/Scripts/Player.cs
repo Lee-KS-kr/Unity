@@ -3,47 +3,47 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-// [RequireComponent(typeof(Animator))] ÀÌ ½ºÅ©¸³Æ®¸¦ °¡Áø °ÔÀÓ ¿ÀºêÁ§Æ®´Â ¹«Á¶°Ç °ýÈ£¼Ó ÄÄÆ÷³ÍÆ®¸¦ °¡Áø´Ù
-// ¾øÀ¸¸é ¸¸µé¾î¼­¶óµµ °¡Áø´Ù.
+// [RequireComponent(typeof(Animator))] ï¿½ï¿½ ï¿½ï¿½Å©ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½î¼­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
 public class Player : MonoBehaviour, IDead
 {
-    private float spinInput = 0.0f; // È¸Àü ÀÔ·Â ¿©ºÎ(-1.0 ~ 1.0)
-    private float moveInput = 0.0f;  // ÀÌµ¿ ÀÔ·Â ¿©ºÎ(-1.0 ~ 1.0)
+    private float _spinInput = 0.0f; // È¸ï¿½ï¿½ ï¿½Ô·ï¿½ ï¿½ï¿½ï¿½ï¿½(-1.0 ~ 1.0)
+    private float _moveInput = 0.0f;  // ï¿½Ìµï¿½ ï¿½Ô·ï¿½ ï¿½ï¿½ï¿½ï¿½(-1.0 ~ 1.0)
 
-    public float moveSpeed = 5.0f; // ÇÃ·¹ÀÌ¾î ÀÌµ¿¼Óµµ(±âº»°ª 1ÃÊ¿¡ 5)
-    public float spinSpeed = 360.0f; // ÇÃ·¹ÀÌ¾î È¸Àü¼Óµµ(±âº»°ª 1ÃÊ¿¡ ÇÑ¹ÙÄû)
+    public float moveSpeed = 5.0f; // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½Ìµï¿½ï¿½Óµï¿½(ï¿½âº»ï¿½ï¿½ 1ï¿½Ê¿ï¿½ 5)
+    public float spinSpeed = 360.0f; // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ È¸ï¿½ï¿½ï¿½Óµï¿½(ï¿½âº»ï¿½ï¿½ 1ï¿½Ê¿ï¿½ ï¿½Ñ¹ï¿½ï¿½ï¿½)
 
-    private bool isDead = false; // ÇÃ·¹ÀÌ¾î Á×¾ú´Ï? ¾Æ´Ï¿ä
+    private bool _isDead = false; // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½×¾ï¿½ï¿½ï¿½? ï¿½Æ´Ï¿ï¿½
 
-    private Animator animator; // ¾Ö´Ï¸ÞÀÌÅÍ ÄÄÆ÷³ÍÆ®
-    private TeacherController playerControl; // ÀÔ·ÂÃ³¸®¿ë Å¬·¡½º
-    private Rigidbody playerRigidbody;
+    private Animator _animator; // ï¿½Ö´Ï¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
+    private TeacherController _playerControl; // ï¿½Ô·ï¿½Ã³ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½
+    private Rigidbody _playerRigidbody;
 
     #region Unity Methods
-    // ¿ÀºêÁ§Æ®°¡ »ý¼ºµÈ Á÷ÈÄ¿¡ 1È¸ ½ÇÇà
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ä¿ï¿½ 1È¸ ï¿½ï¿½ï¿½ï¿½
     private void Awake()
     {
-        // ¿ÀºêÁ§Æ®¿¡ ÀÖ´Â ¾Ö´Ï¸ÞÀÌÅÍ ÄÄÆ÷³ÍÆ®¸¦ Ã£¾Æ¼­ Ä³½Ì
-        animator = GetComponent<Animator>();
-        playerControl = new TeacherController(); // Input Action AssetÀ» ÀÌ¿ëÇØ ÀÚµ¿ »ý¼ºÇÑ Å¬·¡½º
-        playerControl.Player.UseItem.started += UseItem;
-        // Player¶ó´Â ¾×¼Ç¸Ê¿¡ ÀÖ´Â UseItem¾×¼ÇÀÌ startedÀÏ ¶§ UseItemÇÔ¼ö¸¦ ½ÇÇàÇÏµµ·Ï ¹ÙÀÎµù
-        playerRigidbody = GetComponent<Rigidbody>();
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ Ã£ï¿½Æ¼ï¿½ Ä³ï¿½ï¿½
+        _animator = GetComponent<Animator>();
+        _playerControl = new TeacherController(); // Input Action Assetï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½ï¿½ ï¿½Úµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½
+        _playerControl.Player.UseItem.started += UseItem;
+        // Playerï¿½ï¿½ï¿½ ï¿½×¼Ç¸Ê¿ï¿½ ï¿½Ö´ï¿½ UseItemï¿½×¼ï¿½ï¿½ï¿½ startedï¿½ï¿½ ï¿½ï¿½ UseItemï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Îµï¿½
+        _playerRigidbody = GetComponent<Rigidbody>();
     }
 
-    // °ÔÀÓ ¿ÀºêÁ§Æ®°¡ È°¼ºÈ­µÉ ¶§ ½ÇÇà
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ È°ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private void OnEnable()
     {
-        playerControl.Player.Enable(); // ¾×¼Ç¸Êµµ ÇÔ²² È°¼ºÈ­
+        _playerControl.Player.Enable(); // ï¿½×¼Ç¸Êµï¿½ ï¿½Ô²ï¿½ È°ï¿½ï¿½È­
     }
 
-    // °ÔÀÓ ¿ÀºêÁ§Æ®°¡ ºñÈ°¼ºÈ­ µÉ ¶§ ½ÇÇà
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private void OnDisable()
     {
-        playerControl.Player.Disable(); // ¾×¼Ç¸Êµµ ÇÔ²² ºñÈ°¼ºÈ­
+        _playerControl.Player.Disable(); // ï¿½×¼Ç¸Êµï¿½ ï¿½Ô²ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­
     }
 
-    // ¸Å ÇÁ·¹ÀÓ È£Ãâ
+    // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È£ï¿½ï¿½
     //private void Update()
     //{
     //    transform.Translate(Vector3.forward * moveInput * moveSpeed * Time.deltaTime);
@@ -52,12 +52,12 @@ public class Player : MonoBehaviour, IDead
 
     private void FixedUpdate()
     {
-        if (!isDead) // ÇÃ·¹ÀÌ¾î°¡ Á×¾úÀ» ¶§¸¸ ¿òÁ÷ÀÌ°Ô ÇÏµµ·Ï
+        if (!_isDead) // ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½×¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì°ï¿½ ï¿½Ïµï¿½ï¿½ï¿½
         {
-            // ÇöÀç À§Ä¡ + Ä³¸¯ÅÍ°¡ ¹Ù¶óº¸´Â ¹æÇâÀ¸·Î 1ÃÊ¿¡ moveSpeed¾¿ ÀÌµ¿
-            playerRigidbody.MovePosition(playerRigidbody.position + transform.forward * moveInput * moveSpeed * Time.fixedDeltaTime);
-            // ÇöÀç °¢µµ + Ãß°¡°¢µµ
-            playerRigidbody.MoveRotation(playerRigidbody.rotation * Quaternion.AngleAxis(spinInput * spinSpeed * Time.fixedDeltaTime, Vector3.up));
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ + Ä³ï¿½ï¿½ï¿½Í°ï¿½ ï¿½Ù¶óº¸´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 1ï¿½Ê¿ï¿½ moveSpeedï¿½ï¿½ ï¿½Ìµï¿½
+            _playerRigidbody.MovePosition(_playerRigidbody.position + transform.forward * _moveInput * moveSpeed * Time.fixedDeltaTime);
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ + ï¿½ß°ï¿½ï¿½ï¿½ï¿½ï¿½
+            _playerRigidbody.MoveRotation(_playerRigidbody.rotation * Quaternion.AngleAxis(_spinInput * spinSpeed * Time.fixedDeltaTime, Vector3.up));
         }
     }
     #endregion
@@ -65,18 +65,18 @@ public class Player : MonoBehaviour, IDead
     #region Input System Methods
     public void Move(InputAction.CallbackContext context)
     {
-        if (isDead) return;
+        if (_isDead) return;
         //animator.SetBool("isWalking", true);
         Vector2 input = context.ReadValue<Vector2>();
-        spinInput = input.x;
-        moveInput = input.y;
+        _spinInput = input.x;
+        _moveInput = input.y;
         if (context.started)
         {
-            animator.SetBool("isMove", true);
+            _animator.SetBool("isMove", true);
         }
         if (context.canceled)
         {
-            animator.SetBool("isMove", false);
+            _animator.SetBool("isMove", false);
         }
         //if (input == Vector2.zero)
         //    animator.SetBool("isWalking", false);
@@ -84,30 +84,30 @@ public class Player : MonoBehaviour, IDead
 
     public void UseItem(InputAction.CallbackContext context)
     {
-        animator.SetTrigger("OnUseItem"); // ½ºÆäÀÌ½º Å°¸¦ ´­·¶À» ¶§ Æ®¸®°Å ½ÇÇà
+        _animator.SetTrigger("OnUseItem"); // ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ Å°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     }
     #endregion
 
     public void OnDead()
     {
-        Debug.Log($"ÇÃ·¹ÀÌ¾î »ç¸Á.");
-        // »ç¸Á ¿¬Ãâ
-        // Áßº¹»ç¸Á ¹æÁö
-        // Á×¾úÀ» ¶§ ÀÌµ¿Ã³¸® ¾ÈÇÔ
+        Debug.Log($"ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½.");
+        // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        // ï¿½ßºï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        // ï¿½×¾ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ìµï¿½Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-        isDead = true; // ÇÃ·¹ÀÌ¾î »ç¸ÁÃ³¸® ÇÏ¿© ´õÀÌ»ó Å°Á¶ÀÛÀ¸·Î ¿òÁ÷ÀÓÀÌ ºÒ°¡´ÉÇÏµµ·Ï
-        //playerRigidbody.MoveRotation(playerRigidbody.rotation * Quaternion.AngleAxis(-90 , Vector3.right)); // ÇÃ·¹ÀÌ¾î ³Ñ¾î¶ß¸®±â
-        //Vector3 deadPosition = new Vector3(transform.position.z, -0.6f, transform.position.z); // ±×´ë·Î ´©¿ì¸é °øÁß¿¡ ¶°¼­ ¹Ù´Ú¿¡ ´¯Èú À§Ä¡ ÁöÁ¤
-        //transform.Translate(deadPosition); // ÇÃ·¹ÀÌ¾î ¹Ù´Ú¿¡ ´¯È÷±â
+        _isDead = true; // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½Ã³ï¿½ï¿½ ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½Ì»ï¿½ Å°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò°ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½
+        //playerRigidbody.MoveRotation(playerRigidbody.rotation * Quaternion.AngleAxis(-90 , Vector3.right)); // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½Ñ¾ï¿½ß¸ï¿½ï¿½ï¿½
+        //Vector3 deadPosition = new Vector3(transform.position.z, -0.6f, transform.position.z); // ï¿½×´ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ß¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ù´Ú¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
+        //transform.Translate(deadPosition); // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½Ù´Ú¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-        // rigidbody.MovePositionÀ¸·Î ÇÏ·Á°í ÇÏ¿´À¸³ª ¾îÂ°¼­ÀÎÁö ¿òÁ÷ÀÌÁö ¾Ê¾Æ ³ë·ÂÇÏ´Ù°¡ ½ÇÆÐÇÑ ÈçÀû
+        // rigidbody.MovePositionï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½ï¿½ï¿½ ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Â°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´Ù°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         //Vector3 deadBodyPosition = new Vector3(0, -0.6f, 0);
         //playerRigidbody.MovePosition(playerRigidbody.position + transform.up * -0.6f);
 
-        animator.SetTrigger("OnDead");
-        playerRigidbody.constraints = RigidbodyConstraints.None;
-        playerRigidbody.drag = 0;
-        playerRigidbody.angularDrag = 0.05f;
-        playerRigidbody.AddForceAtPosition(-transform.forward*10, transform.position + new Vector3(0, 1.5f, 0));
+        _animator.SetTrigger("OnDead");
+        _playerRigidbody.constraints = RigidbodyConstraints.None;
+        _playerRigidbody.drag = 0;
+        _playerRigidbody.angularDrag = 0.05f;
+        _playerRigidbody.AddForceAtPosition(-transform.forward*10, transform.position + new Vector3(0, 1.5f, 0));
     }
 }
