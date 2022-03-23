@@ -7,20 +7,20 @@ public class WeaponManager : MonoBehaviour
     public static bool isChangeWeapon = false;
     public static Transform currentWeapon;
     public static Animator currentWeaponAnimator;
-    [SerializeField] private string currentWeaponType; // ÇöÀç ¹«±âÀÇ Å¸ÀÔ
+    [SerializeField] private string currentWeaponType; // í˜„ì¬ ë¬´ê¸°ì˜ íƒ€ì…
 
     [SerializeField] private float changeWeaponDelay;
     [SerializeField] private float changeWeaponEndDelay;
 
-    // ¹«±âÁ¾·ùµéÀ» ¸ğµÎ °ü¸®
+    // ë¬´ê¸°ì¢…ë¥˜ë“¤ì„ ëª¨ë‘ ê´€ë¦¬
     [SerializeField] private Gun[] guns;
-    [SerializeField] private Hand[] hands;
+    [SerializeField] private CloseWeapon[] hands;
 
-    // °ü¸®Â÷¿ø¿¡¼­ ½±°Ô ¹«±âÁ¢±ÙÀÌ °¡´ÉÇÏµµ·Ï ¸¸µë.
+    // ê´€ë¦¬ì°¨ì›ì—ì„œ ì‰½ê²Œ ë¬´ê¸°ì ‘ê·¼ì´ ê°€ëŠ¥í•˜ë„ë¡ ë§Œë“¬.
     private Dictionary<string, Gun> gunDictionary = new Dictionary<string, Gun>();
-    private Dictionary<string, Hand> handDictionary = new Dictionary<string, Hand>();
+    private Dictionary<string, CloseWeapon> handDictionary = new Dictionary<string, CloseWeapon>();
 
-    // ÇÊ¿äÇÑ ÄÄÆ÷³ÍÆ®
+    // í•„ìš”í•œ ì»´í¬ë„ŒíŠ¸
     [SerializeField] private GunController gunController;
     [SerializeField] private HandController handController;
 
@@ -32,7 +32,7 @@ public class WeaponManager : MonoBehaviour
         }
         for (int i = 0; i < hands.Length; i++)
         {
-            handDictionary.Add(hands[i].handName, hands[i]);
+            handDictionary.Add(hands[i].weaponName, hands[i]);
         }
     }
 
@@ -42,7 +42,7 @@ public class WeaponManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                StartCoroutine(ChangeWeapon("HAND", "¸Ç¼Õ"));
+                StartCoroutine(ChangeWeapon("HAND", "ë§¨ì†"));
             }
             else if (Input.GetKeyDown(KeyCode.Alpha2))
             {
@@ -87,7 +87,7 @@ public class WeaponManager : MonoBehaviour
         }
         else if (_type == "HAND")
         {
-            handController.HandChange(handDictionary[_name]);
+            handController.CloseWeaponChange(handDictionary[_name]);
         }
     }
 }

@@ -1,10 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-public class Hand : MonoBehaviour
+public class CloseWeapon : MonoBehaviour
 {
-    public string handName;  // 너클이나 맨 손 구분. 이름으로 구분할 것이다.
+    [FormerlySerializedAs("handName")] public string weaponName;  // 너클이나 맨 손 구분. 이름으로 구분할 것이다.
+
+    public bool isHand;
+    public bool isAxe;
+    public bool isSword;
+    public bool isPickAxe;
 
     public float range; // 공격 범위. 팔을 뻗으면 어디까지 공격이 닿을지
     public int damage; // 공격력
