@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -21,6 +22,8 @@ public class Player : MonoBehaviour, IDead
     private TeacherController _playerControl; // 입력처리용 클래스
     private Rigidbody _playerRigidbody;
     private DoorController _doorController;
+
+    private Collider[] _targets = new Collider[1];
     
     private static readonly int Dead = Animator.StringToHash("OnDead");
     private static readonly int OnUseItem = Animator.StringToHash("OnUseItem");
@@ -93,15 +96,19 @@ public class Player : MonoBehaviour, IDead
 
     public void UseItem(InputAction.CallbackContext context)
     {
-        if (context.canceled) // started 사용시 이중호출되는 버그가 있어 canceled 사용
-        {
-            _animator.SetTrigger(OnUseItem); // 스페이스 키를 눌렀을 때 트리거 실행
-            if (_doorController.isInCollider) // 콜라이더 내부에 있을때만 활성화
-            {
-                _doorController.isDoorOpen = !_doorController.isDoorOpen; // 문을 열고 닫도록 bool변수 반전
-                _doorController.MoveDoor(); // 문 여닫기 실행
-            }
-        }
+        // if (context.canceled) // started 사용시 이중호출되는 버그가 있어 canceled 사용
+        // {
+        //     _animator.SetTrigger(OnUseItem); // 스페이스 키를 눌렀을 때 트리거 실행
+        //     if (_doorController.isInCollider) // 콜라이더 내부에 있을때만 활성화
+        //     {
+        //         _doorController.isDoorOpen = !_doorController.isDoorOpen; // 문을 열고 닫도록 bool변수 반전
+        //         _doorController.MoveDoor(); // 문 여닫기 실행
+        //     }
+        // }
+        _animator.SetTrigger(OnUseItem);
+
+        Physics.OverlapSphereNonAlloc(transform.position + new Vector3(0, 1.2f, 1.0f), 0.5f, _targets);
+        Debug.Log(_targets[0].gameObject.name);
     }
     #endregion
 
@@ -127,5 +134,11 @@ public class Player : MonoBehaviour, IDead
         _playerRigidbody.angularDrag = 0.05f;
         var transform1 = transform;
         _playerRigidbody.AddForceAtPosition(-transform1.forward*10, transform1.position + new Vector3(0, 1.5f, 0));
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.black;
+        Gizmos.DrawWireSphere(transform.position+new Vector3(0, 1.2f, -1.2f), 0.5f);
     }
 }
