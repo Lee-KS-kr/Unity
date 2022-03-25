@@ -105,10 +105,32 @@ public class Player : MonoBehaviour, IDead
         //         _doorController.MoveDoor(); // 문 여닫기 실행
         //     }
         // }
-        _animator.SetTrigger(OnUseItem);
+        _animator.SetTrigger("OnUseItem");   // 스페이스 키를 눌렀을 때 트리거 실행        
 
-        Physics.OverlapSphereNonAlloc(transform.position + new Vector3(0, 1.2f, 1.0f), 0.5f, _targets);
-        Debug.Log(_targets[0].gameObject.name);
+        Vector3 center = transform.position + transform.rotation * new Vector3(0, 1.2f, 1.0f);        
+        // 특정 영역에 컬라이더가 있는지 체크하는 함수
+        Physics.OverlapSphereNonAlloc(center, 0.5f, _targets);   // 한번 만든 배열을 계속 사용한다.
+        //targets = Physics.OverlapSphere(center, 0.5f);  // 배열을 매번 새로 만든다.
+
+        // 오버랩된 오브젝트가 있는지 확인
+        if (_targets[0] != null)
+        {
+            GameObject target = _targets[0].gameObject;  // 오버랩된 오브젝트를 가져오기
+            IUseable useableItem = target.GetComponent<IUseable>();
+            while (useableItem == null && target.transform.parent != null)     // 최상단의 IUseable 찾기
+            {
+                target = target.transform.parent.gameObject;
+                useableItem = target.GetComponent<IUseable>();
+            }
+
+            if(useableItem != null)  // 사용 가능한 아이템이 있으면 사용한다.
+            {
+                //targetDoor.Open(true);
+                useableItem.OnUse();
+            }
+
+            _targets[0] = null;  // 처리가 끝났으니 초기화
+        }
     }
     #endregion
 
