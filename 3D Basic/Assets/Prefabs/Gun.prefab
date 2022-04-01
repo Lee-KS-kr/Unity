@@ -173,6 +173,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bullet: {fileID: 793471407867535341, guid: 53e0e298d150df748b4dded0ecec28bc, type: 3}
   spawner: {fileID: 3599473728845946479}
+  usedBullet: {fileID: 6495465453889493647, guid: f68c15f59e54bd446b375b45858f5ca1, type: 3}
   interval: 1
   rateOfFire: 0.1
   shots: 5
