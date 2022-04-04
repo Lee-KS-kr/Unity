@@ -6,7 +6,7 @@ public class Turret_Base : MonoBehaviour
 {
     protected Gun[] _guns;
     
-    [Header("Gun 생성용 변수")] [Range(1, 7)] public int gunCount = 0; // 발사할 총구의 갯수
+    [Header("Gun 생성용 변수")] [Range(1, 6)] public int gunCount = 0; // 발사할 총구의 갯수
     public GameObject gunPrefab; // 생성할 총구의 프리팹
     public Vector3 _standardPosition;
     public float interval = 1;
@@ -38,23 +38,21 @@ public class Turret_Base : MonoBehaviour
             switch (i)
             {
                 case 0:
-                    break;
-                case 1:
                     gunObject.transform.Translate(- _gunsDistance, 0, 0);
                     break;
-                case 2:
+                case 1:
                     gunObject.transform.Translate(+ _gunsDistance, 0, 0);
                     break;
-                case 3:
+                case 2:
                     gunObject.transform.Translate(- (_gunsDistance / 2), _gunsDistance, 0);
                     break;
-                case 4:
+                case 3:
                     gunObject.transform.Translate(+ (_gunsDistance / 2), _gunsDistance, 0);
                     break;
-                case 5:
+                case 4:
                     gunObject.transform.Translate(- (_gunsDistance / 2), -_gunsDistance, 0);
                     break;
-                case 6:
+                case 5:
                     gunObject.transform.Translate(+ (_gunsDistance / 2), -_gunsDistance, 0);
                     break;
             }
