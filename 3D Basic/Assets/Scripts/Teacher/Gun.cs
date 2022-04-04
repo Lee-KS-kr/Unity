@@ -9,7 +9,7 @@ public class Gun : MonoBehaviour
 {
     public GameObject bullet; // 발사할 총알 오브젝트
     public Transform spawner; // 총알이 발사될 위치
-    public Transform usedBullet; // 총알이 들어갈 parent gameObject
+    // public Transform usedBullet; // 총알이 들어갈 parent gameObject
     
     public float interval = 1.0f; // 총알을 발사하는 간격(방아쇠를 당기는 간격)
     public float rateOfFire = 0.1f; // 연사 간격
@@ -53,12 +53,16 @@ public class Gun : MonoBehaviour
             yield return new WaitForSeconds(interval - shots * rateOfFire); // 1초 - 0.1*발사 횟수만큼 대기
             for (int i = 0; i < shots; i++)
             {
-                GameObject bulletInstance = Instantiate(bullet, spawner);
-                bulletInstance.transform.parent = null;
+                // GameObject bulletInstance = Instantiate(bullet, spawner);
+                // bulletInstance.transform.parent = null;
+                bullet = MemoryPool.Inst.GetObject();
+                bullet.transform.position = spawner.position;
+                bullet.transform.rotation = spawner.rotation;
+                bullet.transform.parent = MemoryPool.Inst.parent;
+                
                 // GameObject obj = ObjectPool.GetBullet(i);
                 // obj.transform.position = spawner.position;
                 // obj.transform.parent = usedBullet;
-                
                 //StartCoroutine(ReturnBullet(obj));
                 yield return new WaitForSeconds(rateOfFire); // 0.1초 대기
             }

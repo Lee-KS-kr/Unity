@@ -8,26 +8,44 @@ public class Bullet : MonoBehaviour
 {
     // 1. 앞으로 나가기
     // 2. 충돌 감지 + 대상 해치우기
-
     public float bulletSpeed = 5.0f; // 총알의 이동 속도
 
     private Rigidbody _rigidbody; // 움직이는 물체라 rigidbody 추가
+    private float _timeCount = 0;
+    private float lifeTime = 3;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>(); // rigidbody 캐싱
     }
 
+    // 오브젝트가 활성화될 때 실행
     private void OnEnable()
     {
+        // 재사용을 위한 데이터 초기화
+        _timeCount = 0;
+        _rigidbody.useGravity = false;
+        transform.position = Vector3.zero;
+        transform.rotation = Quaternion.identity;
+        _rigidbody.angularVelocity = Vector3.zero;
+        
         //_rigidbody.velocity = Vector3.forward * bulletSpeed; // 물체의 이동 방향과 속도 설정
         _rigidbody.velocity = transform.forward * bulletSpeed; // 물체의 이동 방향과 속도 설정
-        Destroy(gameObject, 3); // 3초 후 파괴
+        // Destroy(gameObject, lifeTime); // 3초 후 파괴
     }
 
-    private void OnDisable()
+    private void Update()
     {
-        _rigidbody.velocity = Vector3.zero;
+        _timeCount += Time.deltaTime;
+        if (_timeCount > lifeTime)
+        {
+            Remove();
+        }
+    }
+
+    private void Remove()
+    {
+        MemoryPool.Inst.ReturnObject(gameObject);
     }
 
     // 다른 collider와 충돌했을때 실행되는 함수
@@ -53,6 +71,8 @@ public class Bullet : MonoBehaviour
             _rigidbody.AddForce(collision.GetContact(0).normal * 2.0f, ForceMode.Impulse); // 부딪혀서 튕기는 느낌을 추가
             Vector3 randomDir = new Vector3(Random.value, Random.value, Random.value); // 랜덤 방향 지정
             _rigidbody.AddTorque(randomDir * 5.0f, ForceMode.Impulse); // 바닥에 떨어져서 구르는 느낌 추가
+
+            _timeCount = 0;
         }
     }
 }
