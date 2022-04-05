@@ -5,11 +5,12 @@ using Newtonsoft.Json.Bson;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Apple;
+using UnityEngine.Serialization;
 
 public class Enemy : MonoBehaviour
 {
     private NavMeshAgent _agent = null;
-    private float targetRecognitionRange = 5;
+
     // private Vector3 _destination = Vector3.zero;
     // public Transform startPoint = null;
     // public Transform endPoint = null;
@@ -38,10 +39,13 @@ public class Enemy : MonoBehaviour
     //         _agent.SetDestination(_destination); // 다음 목적지로 이동
     //     }
     // }
+    
     public Transform[] wayPoints = null;
     public Transform target = null;
-    private Transform _tempTransform = null;
+    public Transform destinationTransform = null;
+    
     private int _index = 0;
+    private float targetRecognitionRange = 8;
     private IEnumerator _enumerator;
 
     private void Awake()
@@ -54,7 +58,8 @@ public class Enemy : MonoBehaviour
     private void Start()
     {
         _agent.SetDestination(wayPoints[_index].position);
-        _tempTransform = wayPoints[_index];
+        destinationTransform = wayPoints[_index];
+        StartCoroutine(_enumerator);
     }
 
     private void Update()
@@ -63,7 +68,6 @@ public class Enemy : MonoBehaviour
         {
             GoNextWaypoint();
         }
-        StartCoroutine(_enumerator);
     }
 
     bool CheckArrive()
@@ -76,7 +80,7 @@ public class Enemy : MonoBehaviour
         _index++;
         _index = _index % wayPoints.Length;
         _agent.SetDestination(wayPoints[_index].position);
-        _tempTransform = wayPoints[_index];
+        destinationTransform = wayPoints[_index];
     }
 
     // private void Test()
@@ -101,16 +105,19 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator ChasePlayer()
     {
-        // Debug.Log("코루틴 발동");
-        while (Vector3.Distance(transform.position, target.position) <= targetRecognitionRange)
+        while (true)
         {
-            // Debug.Log("추적중");
-            _agent.SetDestination(target.position);
+            // Debug.Log("코루틴 발동");
+            while (Vector3.Distance(transform.position, target.position) <= targetRecognitionRange)
+            {
+                // Debug.Log("추적중");
+                _agent.SetDestination(target.position);
+                yield return null;
+            }
+
+            // Debug.Log("돔황챠");
+            _agent.SetDestination(destinationTransform.position);
             yield return null;
         }
-
-        // Debug.Log("돔황챠");
-        _agent.SetDestination(_tempTransform.position);
-        yield return null;
     }
 }
