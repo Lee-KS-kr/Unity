@@ -1,123 +1,152 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using Newtonsoft.Json.Bson;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Apple;
-using UnityEngine.Serialization;
+using UnityEngine.ProBuilder.MeshOperations;
+
+// 적 상태 표시용 enum
+public enum EnemyState
+{
+    PATROL = 0,
+    CHASE,
+    ATTACK
+}
 
 public class Enemy : MonoBehaviour
 {
-    private NavMeshAgent _agent = null;
+    public Transform[] waypoints = null;    // 순찰할 지점
+    public float attackDelay = 1.0f;        // 공격 가능할 때 공격 시작할 때까지의 딜레이
 
-    // private Vector3 _destination = Vector3.zero;
-    // public Transform startPoint = null;
-    // public Transform endPoint = null;
-    //
-    // private void Awake()
-    // {
-    //     _agent = GetComponent<NavMeshAgent>();
-    // }
-    //
-    // private void Start()
-    // {
-    //     // Enemy의 초기 위치에서 두 지점까지의 거리를 계산 후 가까운 지점을 초기 목적지로 설정
-    //     float toStart = Vector3.Distance(transform.position, startPoint.position); // start지점까지의 거리
-    //     float toEnd = Vector3.Distance(transform.position, endPoint.position); // end지점까지의 거리
-    //     _destination = toStart < toEnd ?  startPoint.position : endPoint.position; // 각 지점까지의 거리를 계산
-    //     _agent.SetDestination(_destination); // 가까운 곳을 목적지로 설정
-    // }
-    //
-    // private void Update()
-    // {
-    //     // 첫 목적지에 도착한것이 확인되면 다른 목적지로 이동
-    //     if (_agent.remainingDistance < _agent.stoppingDistance) // 목적지까지의 거리가 0.1이하이면 도착으로 간주
-    //     {
-    //         _destination = _destination == startPoint.position ? endPoint.position : startPoint.position;
-    //         // 목적지가 start지점이면 end지점으로, end지점이면 start지점으로 설정
-    //         _agent.SetDestination(_destination); // 다음 목적지로 이동
-    //     }
-    // }
-    
-    public Transform[] wayPoints = null;
-    public Transform target = null;
-    public Transform destinationTransform = null;
-    
-    private int _index = 0;
-    private float targetRecognitionRange = 8;
-    private IEnumerator _enumerator;
+    NavMeshAgent agent = null;              // 길찾기용 NavMesh 에이전트
+    Transform target = null;                // 추적할 대상(플레이어만 대상이 된다)
+    int waypointIndex = 0;                  // 현재 내가 가야할 웨이포인트의 인덱스
+    int enterCounter = 0;                   // 겹친 트리거에 들어간 정도
+    int EnterCounter
+    {
+        get
+        {
+            return enterCounter;
+        }
+        set
+        {
+            enterCounter = Mathf.Clamp(value, 0, 2);    // enterCounter의 범위 지정
+        }
+    }
+    float timeCount = 0.0f;                 // 공격 가능한 범위에 들어갔을 때부터 지난 시간
+    EnemyState state = EnemyState.PATROL;   // 현재 enemy의 상태
 
+    // 게임 오브젝트가 생성된 직후
     private void Awake()
     {
-        _agent = GetComponent<NavMeshAgent>();
-        target = GameObject.FindObjectOfType<Player>().transform;
-        _enumerator = ChasePlayer();
+        agent = GetComponent<NavMeshAgent>();   // agent 초기화
+        //agent.remainingDistance
     }
 
+    // 첫번째 update가 실행되기 직전
     private void Start()
     {
-        _agent.SetDestination(wayPoints[_index].position);
-        destinationTransform = wayPoints[_index];
-        StartCoroutine(_enumerator);
+        state = EnemyState.PATROL;          // 시작은 PATROL 상태로
+        agent.SetDestination(waypoints[waypointIndex].position);    // 첫번째 웨이포인트로 이동
     }
 
-    private void Update()
-    {
-        if (CheckArrive())
-        {
-            GoNextWaypoint();
-        }
-    }
-
+    // 목표지점에 도착했는지 체크하는 함수
     bool CheckArrive()
     {
-        return _agent.remainingDistance < _agent.stoppingDistance;
+        //agent.pathPending : 에이전트가 경로를 계산 중이면 true 아니면 false
+        //agent.remainingDistance : 도착지점까지 남아있는 거리
+        //agent.stoppingDistance : 도착했다고 판단해도 되는 거리
+
+        return !agent.pathPending && (agent.remainingDistance <= agent.stoppingDistance);
     }
 
-    private void GoNextWaypoint()
+    // 다음 웨이포인트 지점으로 이동
+    void GoNextWaypoint()
     {
-        _index++;
-        _index = _index % wayPoints.Length;
-        _agent.SetDestination(wayPoints[_index].position);
-        destinationTransform = wayPoints[_index];
+        waypointIndex++;
+        waypointIndex = waypointIndex % waypoints.Length;
+        agent.SetDestination(waypoints[waypointIndex].position);    // 다음 웨이포인트로 이동
     }
 
-    // private void Test()
-    // {
-    //     _agent.Warp(new Vector3(1, 2, 3)); // 한 지점으로 워프시키고 싶을 때
-    //     _agent.speed; // 속도
-    //     _agent.acceleration; // 가속
-    //     _agent.radius; // 회피 반지름
-    //     _agent.avoidancePriority; // 회피 우선도
-    //     _agent.remainingDistance;
-    //     _agent.stoppingDistance;
-    //     _agent.autoRepath;
-    //     _agent.pathPending;
-    // }
-
-    private void OnDrawGizmos()
+    // 트리거로 설정된 내 컬라이더 안에 다른 컬라이더가 들어왔을 때 실행
+    private void OnTriggerEnter(Collider other)
     {
-        // 목표 인식 범위
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, targetRecognitionRange);
-    }
-
-    private IEnumerator ChasePlayer()
-    {
-        while (true)
+        if(other.CompareTag("Player"))  // 플레이어가 들어왔다면
         {
-            // Debug.Log("코루틴 발동");
-            while (Vector3.Distance(transform.position, target.position) <= targetRecognitionRange)
-            {
-                // Debug.Log("추적중");
-                _agent.SetDestination(target.position);
-                yield return null;
-            }
-
-            // Debug.Log("돔황챠");
-            _agent.SetDestination(destinationTransform.position);
-            yield return null;
+            EnterCounter++;             // 상태를 결정하는 EnterCounter를 증가시키고
+            StateTransition(EnterCounter, other.gameObject);    // 상태를 변화시킨다.
         }
+    }
+
+    // 트리거로 설정된 내 컬라이더 안에서 다른 컬라이더가 나갔을 때 실행
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.CompareTag("Player"))  // 플레이어가 나갔다면
+        {
+            EnterCounter--;             // 상태 변경시키기
+            StateTransition(EnterCounter, other.gameObject);
+        }
+    }
+
+    // 상태를 변경시키는 함수
+    void StateTransition(int counter, GameObject _target)
+    {
+        state = (EnemyState)counter;        // counter값으로 상태 지정
+
+        switch (state)                      // 지정된 상태에 따라 알맞은 작업 수행
+        {
+            case EnemyState.PATROL:         // 순찰 상태일 때 
+                target = null;              // 대상 없음
+                agent.isStopped = false;    // 길찾기 사용
+                agent.SetDestination(waypoints[waypointIndex].position); // 원래 순찰 경로로 돌아가기
+                break;
+            case EnemyState.CHASE:          // 추적 상태일 때
+                target = _target.transform; // 추적 대상 설정
+                agent.isStopped = false;    // 길찾기 사용
+                break;
+            case EnemyState.ATTACK:         // 공격 상태일 때
+                target = _target.transform; // 공격 대상 설정
+                agent.isStopped = true;     // 기찾기 정지
+                timeCount = 0;              // 공격용 카운터 초기화
+                break;
+            default:                        // 절대로 들어오면 안된다.
+                target = null;
+                agent.isStopped = true;
+                break;
+        }
+    }
+
+    // 고정된 시간 간격으로 호출
+    private void FixedUpdate()
+    {
+        switch (state)                  // 상태에 따라 다른 진행
+        {
+            case EnemyState.PATROL:     // 순찰 상태일 때                
+                if (CheckArrive())      // 목적지에 도착했는지 확인
+                {
+                    GoNextWaypoint();   // 도착했으면 다음 지점으로 이동
+                }
+                break;
+            case EnemyState.CHASE:      // 추적 상태일 때
+                agent.SetDestination(target.position);  // 추적 대상 위치로 이동
+                break;
+            case EnemyState.ATTACK:     // 공격 상태일 때
+                timeCount += Time.fixedDeltaTime;       // 시간 누적시켜서
+                if (timeCount > attackDelay)            // 누적된 시간이 딜레이보다 커지면
+                {
+                    Debug.Log($"공격 : {Time.realtimeSinceStartup}"); // 공격
+                    timeCount = 0;                      // 누적시킨 시간 초기화
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    bool CheckObstacle()
+    {
+        Ray ray = new Ray();                    // 시작점과 방향 필요
+        RaycastHit hit = new RaycastHit();      //레이캐스트의 결과를 담을 구조체
+        Physics.Raycast(ray, out hit, 5.0f);    //레이캐스트 실행
+        return false;
     }
 }

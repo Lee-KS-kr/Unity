@@ -3,29 +3,28 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Teacher_Switch : MonoBehaviour, IUseable
 {
-    private Transform _bar = null;
+    public Door_Teacher targetDoor = null;
+    public Transform bar = null;
     private bool _switchOn = false;
-    private  const float _angle=15.0f;
-
-    private void Awake()
-    {
-        transform.Find("Bar");
-    }
+    private const float _angle = 15.0f;
 
     public void OnUse()
     {
         if (_switchOn)
         {
             _switchOn = false;
-            _bar.rotation = Quaternion.Euler(-_angle, 0, 0);
+            bar.rotation = Quaternion.Euler(-_angle, 0, 0);
+            _switchOn = targetDoor.Close();  // 연결된 문을 닫았다.
         }
         else
         {
             _switchOn = true;
-            _bar.rotation = Quaternion.Euler(_angle, 0, 0);
+            bar.rotation = Quaternion.Euler(_angle, 0, 0);
+            _switchOn = targetDoor.Open();                   // 연결된 문을 열었다.
         }
     }
 }
