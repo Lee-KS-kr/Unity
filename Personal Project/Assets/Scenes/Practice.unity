@@ -251,7 +251,6 @@ GameObject:
   - component: {fileID: 653459380}
   - component: {fileID: 653459379}
   - component: {fileID: 653459378}
-  - component: {fileID: 653459383}
   m_Layer: 0
   m_Name: Focus
   m_TagString: Untagged
@@ -281,7 +280,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 653459375}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d458058a78b43274e8543882d2cd958e, type: 3}
   m_Name: 
@@ -418,7 +417,7 @@ MonoBehaviour:
     m_ActionName: UI/TrackedDeviceOrientation
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 653459383}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: TestCamera, Assembly-CSharp
         m_MethodName: CameraRotation
         m_Mode: 1
@@ -437,20 +436,6 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &653459383
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 653459375}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc5943e792e4fb146b80e4f50fcd5c78, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cameraRotationLimit: 45
-  lookSensitivity: 5
 --- !u!1 &658422240
 GameObject:
   m_ObjectHideFlags: 0

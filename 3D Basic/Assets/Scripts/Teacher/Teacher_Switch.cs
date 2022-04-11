@@ -7,7 +7,7 @@ using UnityEngine.Serialization;
 
 public class Teacher_Switch : MonoBehaviour, IUseable
 {
-    public Door_Teacher targetDoor = null;
+    public Door targetDoor = null;
     public Transform bar = null;
     private bool _switchOn = false;
     private const float _angle = 15.0f;

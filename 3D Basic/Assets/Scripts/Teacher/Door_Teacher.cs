@@ -6,8 +6,8 @@ using UnityEngine.ProBuilder.Shapes;
 
 public class Door_Teacher : MonoBehaviour
 {
-    private Animator anim = null;   //애니메이터
-    private bool isOpen = false;
+    protected Animator anim = null;   //애니메이터
+    protected bool isOpen = false;
     public bool IsOpen
     {
         get

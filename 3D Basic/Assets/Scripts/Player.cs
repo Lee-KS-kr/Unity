@@ -7,11 +7,12 @@ using UnityEngine.InputSystem;
 
 // [RequireComponent(typeof(Animator))] 이 스크립트를 가진 게임 오브젝트는 무조건 괄호속 컴포넌트를 가진다
 // 없으면 만들어서라도 가진다.
-public class Player : MonoBehaviour, IDead
+public class Player : MonoBehaviour, IDead, ICameraTarget
 {
-#region Variables
+    #region Variables
+
     private float _spinInput = 0.0f; // 회전 입력 여부(-1.0 ~ 1.0)
-    private float _moveInput = 0.0f;  // 이동 입력 여부(-1.0 ~ 1.0)
+    private float _moveInput = 0.0f; // 이동 입력 여부(-1.0 ~ 1.0)
 
     public float moveSpeed = 5.0f; // 플레이어 이동속도(기본값 1초에 5)
     public float spinSpeed = 360.0f; // 플레이어 회전속도(기본값 1초에 한바퀴)
@@ -24,13 +25,15 @@ public class Player : MonoBehaviour, IDead
     private DoorController _doorController;
 
     private Collider[] _targets = new Collider[1];
-    
+
     private static readonly int Dead = Animator.StringToHash("OnDead");
     private static readonly int OnUseItem = Animator.StringToHash("OnUseItem");
     private static readonly int IsMove = Animator.StringToHash("isMove");
-#endregion
+
+    #endregion
 
     #region Unity Methods
+
     // 오브젝트가 생성된 직후에 1회 실행
     private void Awake()
     {
@@ -67,14 +70,19 @@ public class Player : MonoBehaviour, IDead
         if (!_isDead) // 플레이어가 죽었을 때만 움직이게 하도록
         {
             // 현재 위치 + 캐릭터가 바라보는 방향으로 1초에 moveSpeed씩 이동
-            _playerRigidbody.MovePosition(_playerRigidbody.position + transform.forward * _moveInput * moveSpeed * Time.fixedDeltaTime);
+            _playerRigidbody.MovePosition(_playerRigidbody.position +
+                                          transform.forward * _moveInput * moveSpeed * Time.fixedDeltaTime);
             // 현재 각도 + 추가각도
-            _playerRigidbody.MoveRotation(_playerRigidbody.rotation * Quaternion.AngleAxis(_spinInput * spinSpeed * Time.fixedDeltaTime, Vector3.up));
+            _playerRigidbody.MoveRotation(_playerRigidbody.rotation *
+                                          Quaternion.AngleAxis(_spinInput * spinSpeed * Time.fixedDeltaTime,
+                                              Vector3.up));
         }
     }
+
     #endregion
 
     #region Input System Methods
+
     public void Move(InputAction.CallbackContext context)
     {
         if (_isDead) return;
@@ -86,6 +94,7 @@ public class Player : MonoBehaviour, IDead
         {
             _animator.SetBool(IsMove, true);
         }
+
         if (context.canceled)
         {
             _animator.SetBool(IsMove, false);
@@ -105,62 +114,76 @@ public class Player : MonoBehaviour, IDead
         //         _doorController.MoveDoor(); // 문 여닫기 실행
         //     }
         // }
-        _animator.SetTrigger("OnUseItem");   // 스페이스 키를 눌렀을 때 트리거 실행        
-
-        Vector3 center = transform.position + transform.rotation * new Vector3(0, 1.2f, 1.0f);        
-        // 특정 영역에 컬라이더가 있는지 체크하는 함수
-        Physics.OverlapSphereNonAlloc(center, 0.5f, _targets);   // 한번 만든 배열을 계속 사용한다.
-        //targets = Physics.OverlapSphere(center, 0.5f);  // 배열을 매번 새로 만든다.
-
-        // 오버랩된 오브젝트가 있는지 확인
-        if (_targets[0] != null)
+        if (context.canceled)
         {
-            GameObject target = _targets[0].gameObject;  // 오버랩된 오브젝트를 가져오기
-            IUseable useableItem = target.GetComponent<IUseable>();
-            while (useableItem == null && target.transform.parent != null)     // 최상단의 IUseable 찾기
-            {
-                target = target.transform.parent.gameObject;
-                useableItem = target.GetComponent<IUseable>();
-            }
+            _animator.SetTrigger("OnUseItem"); // 스페이스 키를 눌렀을 때 트리거 실행        
 
-            if(useableItem != null)  // 사용 가능한 아이템이 있으면 사용한다.
-            {
-                //targetDoor.Open(true);
-                useableItem.OnUse();
-            }
+            Vector3 center = transform.position + transform.rotation * new Vector3(0, 1.2f, 1.0f);
+            // 특정 영역에 컬라이더가 있는지 체크하는 함수
+            Physics.OverlapSphereNonAlloc(center, 0.5f, _targets); // 한번 만든 배열을 계속 사용한다.
+            //targets = Physics.OverlapSphere(center, 0.5f);  // 배열을 매번 새로 만든다.
 
-            _targets[0] = null;  // 처리가 끝났으니 초기화
+            // 오버랩된 오브젝트가 있는지 확인
+            if (_targets[0] != null)
+            {
+                GameObject target = _targets[0].gameObject; // 오버랩된 오브젝트를 가져오기
+                IUseable useableItem = target.GetComponent<IUseable>();
+                while (useableItem == null && target.transform.parent != null) // 최상단의 IUseable 찾기
+                {
+                    target = target.transform.parent.gameObject;
+                    useableItem = target.GetComponent<IUseable>();
+                }
+
+                if (useableItem != null) // 사용 가능한 아이템이 있으면 사용한다.
+                {
+                    //targetDoor.Open(true);
+                    useableItem.OnUse();
+                }
+
+                _targets[0] = null; // 처리가 끝났으니 초기화
+            }
         }
     }
+
     #endregion
 
     public void OnDead()
     {
-        Debug.Log($"플레이어 사망.");
-        // 사망 연출
-        // 중복사망 방지
-        // 죽었을 때 이동처리 안함
+        if (!_isDead)
+        {
+            Debug.Log($"플레이어 사망.");
+            // GameManager.Inst.OnGameOver();
+            // 사망 연출
+            // 중복사망 방지
+            // 죽었을 때 이동처리 안함
 
-        _isDead = true; // 플레이어 사망처리 하여 더이상 키조작으로 움직임이 불가능하도록
-        //playerRigidbody.MoveRotation(playerRigidbody.rotation * Quaternion.AngleAxis(-90 , Vector3.right)); // 플레이어 넘어뜨리기
-        //Vector3 deadPosition = new Vector3(transform.position.z, -0.6f, transform.position.z); // 그대로 누우면 공중에 떠서 바닥에 눕힐 위치 지정
-        //transform.Translate(deadPosition); // 플레이어 바닥에 눕히기
+            _isDead = true; // 플레이어 사망처리 하여 더이상 키조작으로 움직임이 불가능하도록
+            //playerRigidbody.MoveRotation(playerRigidbody.rotation * Quaternion.AngleAxis(-90 , Vector3.right)); // 플레이어 넘어뜨리기
+            //Vector3 deadPosition = new Vector3(transform.position.z, -0.6f, transform.position.z); // 그대로 누우면 공중에 떠서 바닥에 눕힐 위치 지정
+            //transform.Translate(deadPosition); // 플레이어 바닥에 눕히기
 
-        // rigidbody.MovePosition으로 하려고 하였으나 어째서인지 움직이지 않아 노력하다가 실패한 흔적
-        //Vector3 deadBodyPosition = new Vector3(0, -0.6f, 0);
-        //playerRigidbody.MovePosition(playerRigidbody.position + transform.up * -0.6f);
+            // rigidbody.MovePosition으로 하려고 하였으나 어째서인지 움직이지 않아 노력하다가 실패한 흔적
+            //Vector3 deadBodyPosition = new Vector3(0, -0.6f, 0);
+            //playerRigidbody.MovePosition(playerRigidbody.position + transform.up * -0.6f);
 
-        _animator.SetTrigger(Dead);
-        _playerRigidbody.constraints = RigidbodyConstraints.None;
-        _playerRigidbody.drag = 0;
-        _playerRigidbody.angularDrag = 0.05f;
-        var transform1 = transform;
-        _playerRigidbody.AddForceAtPosition(-transform1.forward*10, transform1.position + new Vector3(0, 1.5f, 0));
+            _animator.SetTrigger(Dead);
+            _playerRigidbody.constraints = RigidbodyConstraints.None;
+            _playerRigidbody.drag = 0;
+            _playerRigidbody.angularDrag = 0.05f;
+            var transform1 = transform;
+            _playerRigidbody.AddForceAtPosition(-transform1.forward * 10,
+                transform1.position + new Vector3(0, 1.5f, 0));
+        }
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.black;
-        Gizmos.DrawWireSphere(transform.position+new Vector3(0, 1.2f, -1.2f), 0.5f);
+        Gizmos.DrawWireSphere(transform.position + new Vector3(0, 1.2f, -1.2f), 0.5f);
+    }
+
+    public Transform GetCameraPosition()
+    {
+        return transform.Find("Focus");
     }
 }

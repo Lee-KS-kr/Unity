@@ -14,9 +14,13 @@ public class FollowCamera : MonoBehaviour
         target = _target;
     }
 
-    private void LateUpdate()
+    private void FixedUpdate()
     {
+        // 덜그덕거림
         transform.rotation = Quaternion.Lerp(transform.rotation, target.rotation, smoothness * Time.deltaTime);
+        // transform.LookAt(target);
+        // transform.rotation = target.rotation; // 덜그덕거림
         transform.position = Vector3.Lerp(transform.position, target.position, smoothness * Time.deltaTime);
+        // transform.position = Vector3.Lerp(transform.position, target.position+new Vector3(0, 0, -offset), smoothness * Time.deltaTime);
     }
 }
